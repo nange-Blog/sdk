@@ -24,26 +24,44 @@
     直接使用STS Token时，您需要自行维护STS Token的周期性更新。
 
     ```
-    import com.aliyuncs.DefaultAcsClient;
-    import com.aliyuncs.auth.BasicSessionCredentials;
-    import com.aliyuncs.ecs.model.v20140526.DescribeInstancesRequest;
-    import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
-    import com.aliyuncs.exceptions.ClientException;
-    import com.aliyuncs.profile.DefaultProfile;
-    public class SimpleSTSTokenSample {
-        public static void main(String[] args) {
+    using System;
+    using Aliyun.Acs.Core;
+    using Aliyun.Acs.Core.Auth;
+    using Aliyun.Acs.Core.Profile;
+    using Aliyun.Acs.Core.Exceptions;
+    using Aliyun.Acs.Ecs.Model.V20140526;
+    
+    class SimpleSTSTokenSample
+    {
+        static void Main(string[] args)
+        {
             BasicSessionCredentials credentials = new BasicSessionCredentials(
                 "<your-access-key-id>",
                 "<your-access-key-secret>",
-                "<your-session-token>"
-            );
-            DefaultProfile profile = DefaultProfile.getProfile("<your-region-id>");
+                "<your-session-token>");
+    			
+            // 创建客户端实例
+            IClientProfile profile = DefaultProfile.GetProfile("<your-region-id>");
             DefaultAcsClient client = new DefaultAcsClient(profile, credentials);
-            DescribeInstancesRequest request = new DescribeInstancesRequest();
-            try {
-                DescribeInstancesResponse response = client.getAcsResponse(request);
-            } catch (ClientException e) {
-                System.err.println(e.toString());
+            try
+            {
+                // 创建API请求并设置参数
+                DescribeInstancesRequest request = new DescribeInstancesRequest();
+                request.PageSize = 10;
+    			
+                // 请求并打印处理结果
+                DescribeInstancesResponse response = client.GetAcsResponse(request);
+                Console.WriteLine("TotalCount: {0}", response.TotalCount);
+            }
+            catch (ServerException e)
+            {
+                Console.WriteLine(e.ErrorCode);
+                Console.WriteLine(e.ErrorMessage);
+            }
+            catch (ClientException e)
+            {
+                Console.WriteLine(e.ErrorCode);
+                Console.WriteLine(e.ErrorMessage);
             }
         }
     }
@@ -58,31 +76,48 @@
     您可以通过指定RAM的角色信息，让SDK帮您自动申请并维护STS Token。
 
     ```
-    import com.aliyuncs.DefaultAcsClient;
-    import com.aliyuncs.auth.BasicCredentials;
-    import com.aliyuncs.auth.STSAssumeRoleSessionCredentialsProvider;
-    import com.aliyuncs.ecs.model.v20140526.DescribeInstancesRequest;
-    import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
-    import com.aliyuncs.exceptions.ClientException;
-    import com.aliyuncs.profile.DefaultProfile;
-    public class UseRoleArnSample {
-        public static void main(String[] args) {
-            DefaultProfile profile = DefaultProfile.getProfile("<your-region-id>");
+    using System;
+    using Aliyun.Acs.Core;
+    using Aliyun.Acs.Core.Auth;
+    using Aliyun.Acs.Core.Profile;
+    using Aliyun.Acs.Core.Exceptions;
+    using Aliyun.Acs.Ecs.Model.V20140526;
+    
+    class UseRoleArnSample
+    {
+        static void Main(string[] args)
+        {
+            IClientProfile profile = DefaultProfile.GetProfile("<your-region-id>");
             BasicCredentials basicCredentials = new BasicCredentials(
                 "<your-access-key-id>",
-                "<your-access-key-secret>"
-            );
+                "<your-access-key-secret>");
             STSAssumeRoleSessionCredentialsProvider provider = new STSAssumeRoleSessionCredentialsProvider(
                 basicCredentials,
                 "<your-role-arn>",
-                profile
-            );
+                profile);
+    			
+            // 创建客户端实例
             DefaultAcsClient client = new DefaultAcsClient(profile, provider);
-            DescribeInstancesRequest request = new DescribeInstancesRequest();
-            try {
-                DescribeInstancesResponse response = client.getAcsResponse(request);
-            } catch (ClientException e) {
-                System.err.println(e.toString());
+    		
+            try
+            {
+                // 创建API请求并设置参数
+                DescribeInstancesRequest request = new DescribeInstancesRequest();
+                request.PageSize = 10;
+    			
+                // 请求并打印处理结果
+                DescribeInstancesResponse response = client.GetAcsResponse(request);
+                Console.WriteLine("TotalCount: {0}", response.TotalCount);
+            }
+            catch (ServerException e)
+            {
+                Console.WriteLine(e.ErrorCode);
+                Console.WriteLine(e.ErrorMessage);
+            }
+            catch (ClientException e)
+            {
+                Console.WriteLine(e.ErrorCode);
+                Console.WriteLine(e.ErrorMessage);
             }
         }
     }

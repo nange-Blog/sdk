@@ -7,24 +7,38 @@
 ## 示例 {#section_th2_n3k_zdb .section}
 
 ```
-import com.aliyuncs.DefaultAcsClient;
-import com.aliyuncs.auth.InstanceProfileCredentialsProvider;
-import com.aliyuncs.ecs.model.v20140526.DescribeInstancesRequest;
-import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
-import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.profile.DefaultProfile;
-public class NoAKAccessSample {
-    public static void main(String[] args) {
-        DefaultProfile profile = DefaultProfile.getProfile("<your-region-id>");
+using Aliyun.Acs.Core;
+using Aliyun.Acs.Core.Auth;
+using Aliyun.Acs.Core.Exceptions;
+using Aliyun.Acs.Core.Profile;
+using Aliyun.Acs.Ecs.Model.V20140526;
+
+class NoAKAccessSample
+{
+    static void Main(string[] args)
+    {
+        // 构建一个客户端实例，用于发起请求
+        DefaultProfile profile = DefaultProfile.GetProfile("<your-region-id>");
         InstanceProfileCredentialsProvider provider = new InstanceProfileCredentialsProvider(
-            "<your-role-name>"
-        );
+            "<your-role-name>");
         DefaultAcsClient client = new DefaultAcsClient(profile, provider);
-        DescribeInstancesRequest request = new DescribeInstancesRequest();
-        try {
-            DescribeInstancesResponse response = client.getAcsResponse(request);
-        } catch (ClientException e) {
-            System.err.println(e.toString());
+		
+        try
+        {
+            // 构造请求
+            DescribeInstancesRequest request = new DescribeInstancesRequest();
+            request.PageSize = 10;
+            // 发起请求，并得到 Response
+            DescribeInstancesResponse response = client.GetAcsResponse(request);
+            System.Console.WriteLine(response.TotalCount);
+        }
+        catch (ServerException ex)
+        {
+            System.Console.WriteLine(ex.ToString());
+        }
+        catch (ClientException ex)
+        {
+            System.Console.WriteLine(ex.ToString());
         }
     }
 }

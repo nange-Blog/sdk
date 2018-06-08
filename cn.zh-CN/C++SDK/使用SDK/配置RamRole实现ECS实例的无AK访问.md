@@ -7,26 +7,36 @@
 ## 示例 {#section_th2_n3k_zdb .section}
 
 ```
-import com.aliyuncs.DefaultAcsClient;
-import com.aliyuncs.auth.InstanceProfileCredentialsProvider;
-import com.aliyuncs.ecs.model.v20140526.DescribeInstancesRequest;
-import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
-import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.profile.DefaultProfile;
-public class NoAKAccessSample {
-    public static void main(String[] args) {
-        DefaultProfile profile = DefaultProfile.getProfile("<your-region-id>");
-        InstanceProfileCredentialsProvider provider = new InstanceProfileCredentialsProvider(
-            "<your-role-name>"
-        );
-        DefaultAcsClient client = new DefaultAcsClient(profile, provider);
-        DescribeInstancesRequest request = new DescribeInstancesRequest();
-        try {
-            DescribeInstancesResponse response = client.getAcsResponse(request);
-        } catch (ClientException e) {
-            System.err.println(e.toString());
-        }
+#include <iostream>
+#include <alibabacloud/core/AlibabaCloud.h>
+#include <alibabacloud/core/InstanceProfileCredentialsProvider.h>
+#include <alibabacloud/ecs/EcsClient.h>
+
+using namespace AlibabaCloud;
+using namespace AlibabaCloud::Ecs;
+int main(int argc, char** argv)
+{
+    // 初始化 SDK
+    AlibabaCloud::InitializeSdk();
+    ClientConfiguration configuration("<your-region-id>");
+    EcsClient client(std::make_shared<InstanceProfileCredentialsProvider>("<your-role-name>"), configuration);
+
+    // 创建API请求并设置参数
+    Model::DescribeInstancesRequest request;
+    request.setPageSize(10);
+    auto outcome = client.describeInstances(request);
+    if (!outcome.isSuccess())
+    {
+        // 异常处理
+        std::cout << outcome.error().errorCode() << std::endl;
+        AlibabaCloud::ShutdownSdk();
+        return -1;
     }
+    std::cout << "totalCount: " << outcome.result().getTotalCount() << std::endl;
+
+    // 关闭 SDK
+    AlibabaCloud::ShutdownSdk();
+    return 0;
 }
 ```
 

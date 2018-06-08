@@ -17,7 +17,7 @@
 
 ## 示例代码 {#section_lq5_3kk_zdb .section}
 
-**注：** 运行该示例代码将创建ECS实例，并产生实际费用。
+**说明：** 运行该示例代码将创建ECS实例，并产生实际费用。
 
 ```
 from aliyunsdkcore.client import AcsClient

@@ -4,7 +4,7 @@
 
 使用Python SDK时，您可以为某个请求指定使用HTTP或HTTPS协议，您也可以设置全局默认协议。
 
-**注：** 产品的默认协议（HTTP/HTTPS）优先于设置的全局默认协议。此外，访问控制 \(RAM\)，安全令牌 \(STS\) 和密钥管理 \(KMS\) 的默认协议为 HTTPS，不能使用 HTTP 协议。
+**说明：** 产品的默认协议（HTTP/HTTPS）优先于设置的全局默认协议。此外，访问控制 \(RAM\)，安全令牌 \(STS\) 和密钥管理 \(KMS\) 的默认协议为 HTTPS，不能使用 HTTP 协议。
 
 ## 添加OpenSSL依赖 {#section_ad3_rkl_zdb .section}
 
